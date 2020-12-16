@@ -12,6 +12,7 @@ import (
 var errPasteBurned = errors.New("paste has been burned")
 var errPasteExpired = errors.New("paste has expired")
 var errPasteNotFound = errors.New("paste not found")
+var errNoContent = errors.New("no content for new paste")
 
 // NewPasteForm - new paste using a POST request
 func NewPasteForm(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +35,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 
 	// error out if content is empty
 	if len(content) < 1 {
-		w.Write([]byte("no content"))
+		renderError(w, r, errNoContent, http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -55,7 +56,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	logger.Info("creating new paste", title, pasteID)
 	if err := db.NewPaste(pasteID, title, content, expiry, password, burn, discuss); err != nil {
 		logger.Info("could not create a new paste")
-		w.Write([]byte(err.Error()))
+		renderError(w, r, err, http.StatusInternalServerError)
 		return
 	}
 	w.Write([]byte("new paste form"))
@@ -76,7 +77,8 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 func ViewPasteRaw(w http.ResponseWriter, r *http.Request) {
 	paste, err := getPaste(r)
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		renderError(w, r, err, http.StatusNotFound)
+		return
 	}
 	w.Write([]byte(paste.Content))
 }
