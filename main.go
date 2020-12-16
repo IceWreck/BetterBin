@@ -30,8 +30,8 @@ func main() {
 	r.Get("/paste/raw/{pasteID}", handlers.ViewPasteRaw)
 	// Link Shortner
 	r.Get("/shortner/new", handlers.Home)
-	r.Post("/shortner/new", handlers.Home)
-	r.Get("/s/{linkID}", handlers.Home)
+	r.Post("/shortner/new", handlers.NewLinkForm)
+	r.Get("/s/{linkID}", handlers.RedirectLink)
 	// File Drop
 	r.Get("/drop/new", handlers.Home)
 	r.Post("/drop/new", handlers.Home)
