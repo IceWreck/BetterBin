@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/IceWreck/BetterBin/db"
@@ -70,7 +71,16 @@ func NewPastePage(w http.ResponseWriter, r *http.Request) {
 
 // ViewPastePage - webpage to view a paste
 func ViewPastePage(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("view paste page"))
+	paste, err := getPaste(r)
+	if err != nil {
+		renderError(w, r, err, http.StatusNotFound)
+		return
+	}
+	err = templateCache["view_paste"].Execute(w, paste)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
 
 // ViewPasteRaw - curl/wget friendly raw paste contents

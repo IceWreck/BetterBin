@@ -1,0 +1,23 @@
+{{ define "title" }}
+BetterBin
+{{ end }}
+{{ define "body" }}
+<main>
+<div class="hero">
+    <h1>BetterBin</h1>
+    <h3 id="tagline">
+        The all in one pastebin, link shortner and file drop
+        solution.
+    </h3>
+    <p>Open Source. Self-Hostable. <br /></p>
+    <div>
+        <a href="/"><button>PasteBin</button></a>
+        <a href="/"><button>Link Shortner</button></a>
+        <a href="/"><button>File Drop</button></a>
+    </div>
+</div>
+<h3>API Documentation</h3>
+<p>Use your favourite CLI to get pastes.</p>
+<pre><code>curl paste.example.com/paste/raw/6gr4hg74hj</code></pre>
+</main>
+{{ end }}

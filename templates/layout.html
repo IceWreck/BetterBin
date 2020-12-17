@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <meta name="description" content="" />
+        <meta name="author" content="IceWreck" />
+        <link rel="icon" href="/static/img/favicon.ico" />
+
+        <title>{{template "title" .}}</title>
+
+        <!-- Template CSS -->
+        <link href="/static/css/marx.min.css" rel="stylesheet" />
+        <link href="/static/css/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/" class="brand">BetterBin </a></li>
+                <li class="active"><a href="/">Pastebin </a></li>
+                <li><a href="/">Link Shortner </a></li>
+                <li><a href="/">File Drop </a></li>
+            </ul>
+        </nav>
+        {{template "body" .}}
+        <main>
+        
+
+            <footer>
+                <p>
+                    <a href="https://github.com/IceWreck/BetterBin"
+                        >BetterBin</a
+                    >
+                    is free and open source software.
+                </p>
+            </footer>
+        </main>
+    </body>
+</html>

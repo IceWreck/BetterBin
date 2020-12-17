@@ -1,0 +1,16 @@
+{{ define "title" }}
+View Paste
+{{ end }}
+{{ define "body" }}
+<style>
+.view-plain {
+    max-width: none;
+}
+</style>
+<main class="view-plain">
+    <h2>{{.Title}}</h2>
+    <a href="/paste/raw/{{.ID}}"><button>Raw</button></a>
+    <br/>
+    <pre><code>{{.Content}}</code></pre>
+</main>
+{{ end }}
