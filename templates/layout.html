@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
     <head>
         <!-- Required meta tags -->
-
         <meta charset="utf-8" />
         <meta
             name="viewport"
@@ -14,31 +13,78 @@
 
         <title>{{template "title" .}}</title>
 
-        <!-- Template CSS -->
-        <link href="/static/css/marx.min.css" rel="stylesheet" />
+        <!-- CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
         <link href="/static/css/style.css" rel="stylesheet" />
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="/" class="brand">BetterBin </a></li>
-                <li class="active"><a href="/">Pastebin </a></li>
-                <li><a href="/">Link Shortner </a></li>
-                <li><a href="/">File Drop </a></li>
-            </ul>
-        </nav>
-        {{template "body" .}}
-        <main>
-        
 
-            <footer>
-                <p>
-                    <a href="https://github.com/IceWreck/BetterBin"
-                        >BetterBin</a
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header>
+            <!-- Fixed navbar -->
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">BetterBin</a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse"
+                        aria-controls="navbarCollapse"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
                     >
-                    is free and open source software.
-                </p>
-            </footer>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                            <li class="nav-item active">
+                                <a class="nav-link" aria-current="page" href="#"
+                                    >Home</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/paste/new">PasteBin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/shortner/new">Link Shortner</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/drop/new">File Drop</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main class="flex-shrink-0">
+            {{template "body" .}}
         </main>
+
+        <footer class="footer mt-auto py-3 bg-light">
+            <div class="container">
+                <span class="text-muted"
+                    >BetterBin is free and open source software.</span
+                >
+            </div>
+        </footer>
+        <!-- CSS -->
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

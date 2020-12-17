@@ -1,16 +1,22 @@
-{{ define "title" }}
-View Paste
-{{ end }}
-{{ define "body" }}
-<style>
-.view-plain {
-    max-width: none;
-}
-</style>
-<main class="view-plain">
-    <h2>{{.Title}}</h2>
-    <a href="/paste/raw/{{.ID}}"><button>Raw</button></a>
-    <br/>
-    <pre><code>{{.Content}}</code></pre>
-</main>
+{{ define "title" }} View Paste {{ end }} {{ define "body" }}
+<div class="container paste-container">
+    <div class="mt-4"></div>
+    <div class="row">
+        <div class="col">
+            <h2>{{.Title}}</h2>
+            <small>Created 3/4/4/</small>
+        </div>
+        <div class="col-md-auto">
+            <br />
+            <button type="button" class="btn btn-outline-dark">Copy</button>
+            <a href="/paste/raw/{{.ID}}"
+                ><button type="button" class="btn btn-outline-primary">
+                    Raw
+                </button></a
+            >
+        </div>
+    </div>
+    <hr />
+    <pre class="view-plaintext"><code>{{.Content}}</code></pre>
+</div>
 {{ end }}
