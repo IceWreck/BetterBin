@@ -24,6 +24,10 @@ func cacheTemplates() map[string](*template.Template) {
 			"./templates/layout.html",
 			"./templates/pages/new_paste.html",
 		}...)),
+		"new_link": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/new_link.html",
+		}...)),
 	}
 	return cache
 }

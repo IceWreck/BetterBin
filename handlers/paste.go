@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/IceWreck/BetterBin/db"
@@ -15,7 +14,7 @@ var errPasteExpired = errors.New("paste has expired")
 var errPasteNotFound = errors.New("paste not found")
 var errNoContent = errors.New("no content for new paste")
 
-// NewPasteForm - new paste using a POST request
+// NewPasteForm (API) - new paste using a POST request
 func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("title")
 	content := r.PostFormValue("content")
@@ -60,7 +59,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, err, http.StatusInternalServerError)
 		return
 	}
-	renderPaste(w, r, pasteID)
+	renderSuccess(w, r, pasteID)
 	return
 }
 
@@ -68,7 +67,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 func NewPastePage(w http.ResponseWriter, r *http.Request) {
 	err := templateCache["new_paste"].Execute(w, nil)
 	if err != nil {
-		log.Println(err.Error())
+		logger.Error(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
 }
@@ -82,7 +81,7 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 	}
 	err = templateCache["view_paste"].Execute(w, paste)
 	if err != nil {
-		log.Println(err.Error())
+		logger.Error(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
 }

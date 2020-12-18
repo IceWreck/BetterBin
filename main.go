@@ -29,7 +29,7 @@ func main() {
 	r.Get("/paste/view/{pasteID}", handlers.ViewPastePage)
 	r.Get("/paste/raw/{pasteID}", handlers.ViewPasteRaw)
 	// Link Shortner
-	r.Get("/shortner/new", handlers.Home)
+	r.Get("/shortner/new", handlers.NewLinkPage)
 	r.Post("/shortner/new", handlers.NewLinkForm)
 	r.Get("/s/{linkID}", handlers.RedirectLink)
 	// File Drop

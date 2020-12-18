@@ -1,8 +1,3 @@
-const toUrlEncoded = (obj) =>
-    Object.keys(obj)
-        .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]))
-        .join("&");
-
 const newPaste = () => {
     const title = document.getElementById("input-paste-title").value;
     const password = document.getElementById("input-paste-password").value;
@@ -35,12 +30,12 @@ const newPaste = () => {
         })
         .then(function (data) {
             console.log(data);
-            if ("paste_id" in data) {
+            if ("id" in data) {
                 let pasteLink =
                     "http://" +
                     window.location.host +
                     "/paste/view/" +
-                    data["paste_id"];
+                    data["id"];
                 message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
                 newAlert("success", message);
             } else if ("error" in data) {
@@ -49,15 +44,4 @@ const newPaste = () => {
                 newAlert("danger", "An unknown error occurred.");
             }
         });
-};
-
-const newAlert = (alertType, message) => {
-    const alert = `
-        <div class="alert alert-${alertType}" role="alert">
-        ${message}
-        </div>
-        `;
-    document
-        .getElementById("information-alerts")
-        .insertAdjacentHTML("afterbegin", alert);
 };

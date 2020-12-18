@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"net/url"
 
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/logger"
@@ -12,7 +13,7 @@ import (
 var errInvalidLink = errors.New("invalid link")
 var errLinkNotFound = errors.New("expanded URL for this id not found")
 
-// NewLinkForm - new shortened url using a POST request
+// NewLinkForm (API) - new shortened url using a POST request
 func NewLinkForm(w http.ResponseWriter, r *http.Request) {
 	longLink := r.PostFormValue("url")
 
@@ -21,16 +22,31 @@ func NewLinkForm(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, errInvalidLink, http.StatusUnprocessableEntity)
 		return
 	}
-	// TODO: regex to validate input link
+
+	// validate input link
+	_, err := url.ParseRequestURI(longLink)
+	if err != nil {
+		renderError(w, r, errInvalidLink, http.StatusUnprocessableEntity)
+		return
+	}
 
 	linkID := newID(10)
-	if err := db.NewLink(linkID, longLink); err != nil {
+	if err = db.NewLink(linkID, longLink); err != nil {
 		logger.Info(err)
 		renderError(w, r, err, http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte(linkID))
+	renderSuccess(w, r, linkID)
 	return
+}
+
+// NewLinkPage - webpage to make a new shortened link
+func NewLinkPage(w http.ResponseWriter, r *http.Request) {
+	err := templateCache["new_link"].Execute(w, nil)
+	if err != nil {
+		logger.Error(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
 
 // RedirectLink - redirect to complete link

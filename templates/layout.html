@@ -52,19 +52,23 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                            <li class="nav-item active">
-                                <a class="nav-link" aria-current="page" href="#"
-                                    >Home</a
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/paste/new"
+                                    >PasteBin</a
                                 >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/paste/new">PasteBin</a>
+                                <a class="nav-link" href="/shortner/new"
+                                    >Link Shortner</a
+                                >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/shortner/new">Link Shortner</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/drop/new">File Drop</a>
+                                <a class="nav-link" href="/drop/new"
+                                    >File Drop</a
+                                >
                             </li>
                         </ul>
                     </div>
@@ -73,9 +77,7 @@
         </header>
 
         <!-- Begin page content -->
-        <main class="flex-shrink-0">
-            {{template "body" .}}
-        </main>
+        <main class="flex-shrink-0">{{template "body" .}}</main>
 
         <footer class="footer mt-auto py-3 bg-light">
             <div class="container">
@@ -84,7 +86,8 @@
                 >
             </div>
         </footer>
-        <!-- CSS -->
+        <!-- JS -->
+        <script src="/static/js/common.js"></script>
         <script src="/static/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
