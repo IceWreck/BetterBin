@@ -20,6 +20,10 @@ func cacheTemplates() map[string](*template.Template) {
 			"./templates/layout.html",
 			"./templates/pages/view_paste.html",
 		}...)),
+		"new_paste": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/new_paste.html",
+		}...)),
 	}
 	return cache
 }

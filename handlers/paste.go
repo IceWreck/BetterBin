@@ -60,13 +60,17 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, err, http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte("new paste form"))
+	renderPaste(w, r, pasteID)
 	return
 }
 
 // NewPastePage - webpage to make a new paste
 func NewPastePage(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("new paste page"))
+	err := templateCache["new_paste"].Execute(w, nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
 
 // ViewPastePage - webpage to view a paste
