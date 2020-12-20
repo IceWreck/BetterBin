@@ -11,5 +11,6 @@ const newAlert = (alertType, message) => {
                 `;
     document
         .getElementById("information-alerts")
-        .insertAdjacentHTML("afterbegin", alert);
+        // .insertAdjacentHTML("afterbegin", alert);
+        .innerHTML = alert;
 };

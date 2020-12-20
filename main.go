@@ -28,12 +28,14 @@ func main() {
 	r.Post("/paste/new", handlers.NewPasteForm)
 	r.Get("/paste/view/{pasteID}", handlers.ViewPastePage)
 	r.Get("/paste/raw/{pasteID}", handlers.ViewPasteRaw)
+	r.Post("/paste/view/{pasteID}", handlers.ViewPastePage) // required for password
+	r.Post("/paste/raw/{pasteID}", handlers.ViewPasteRaw)   // required for password
 	// Link Shortner
 	r.Get("/shortner/new", handlers.NewLinkPage)
 	r.Post("/shortner/new", handlers.NewLinkForm)
 	r.Get("/s/{linkID}", handlers.RedirectLink)
 	// File Drop
-	r.Get("/drop/new", handlers.Home)
+	r.Get("/drop/new", handlers.NewDropPage)
 	r.Post("/drop/new", handlers.Home)
 	r.Get("/drop/dl/{dropID}", handlers.Home)
 

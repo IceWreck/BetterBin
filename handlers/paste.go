@@ -13,6 +13,7 @@ var errPasteBurned = errors.New("paste has been burned")
 var errPasteExpired = errors.New("paste has expired")
 var errPasteNotFound = errors.New("paste not found")
 var errNoContent = errors.New("no content for new paste")
+var errPasswordRequired = errors.New("password required")
 
 // NewPasteForm (API) - new paste using a POST request
 func NewPasteForm(w http.ResponseWriter, r *http.Request) {
@@ -40,17 +41,25 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// convert expiry to a form suitable for sql
+	// never place user input directly into the query
 	switch expiry {
 	case "year":
+		expiry = "1 years"
 	case "month":
+		expiry = "1 month"
 	case "week":
+		expiry = "7 days"
 	case "day":
+		expiry = "1 days"
 	case "hour":
+		expiry = "1 hours"
 	case "10min":
+		expiry = "10 minutes"
 	case "1min":
+		expiry = "1 minutes"
 	default:
 		// never expire
-		expiry = "never"
+		expiry = "999 years"
 	}
 	pasteID := newID(10)
 	logger.Info("creating new paste", title, pasteID)
@@ -75,7 +84,10 @@ func NewPastePage(w http.ResponseWriter, r *http.Request) {
 // ViewPastePage - webpage to view a paste
 func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 	paste, err := getPaste(r)
-	if err != nil {
+	if err == errPasswordRequired {
+		renderTemplate(w, "password_required", nil)
+		return
+	} else if err != nil {
 		renderError(w, r, err, http.StatusNotFound)
 		return
 	}
@@ -89,7 +101,10 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 // ViewPasteRaw - curl/wget friendly raw paste contents
 func ViewPasteRaw(w http.ResponseWriter, r *http.Request) {
 	paste, err := getPaste(r)
-	if err != nil {
+	if err == errPasswordRequired {
+		renderError(w, r, err, http.StatusNotFound)
+		return
+	} else if err != nil {
 		renderError(w, r, err, http.StatusNotFound)
 		return
 	}
@@ -99,6 +114,9 @@ func ViewPasteRaw(w http.ResponseWriter, r *http.Request) {
 // getPaste has common stuff required in both ViewPastePage and ViewPasteRaw
 func getPaste(r *http.Request) (db.Paste, error) {
 	pasteID := chi.URLParam(r, "pasteID")
+	// password can be either URL query parameters or POST/PUT values
+	password := r.FormValue("password")
+
 	logger.Debug("fetching paste", pasteID)
 	paste, err := db.GetPaste(pasteID)
 	if err != nil {
@@ -106,5 +124,11 @@ func getPaste(r *http.Request) (db.Paste, error) {
 		return paste, errPasteNotFound
 	}
 	// TODO: add expired/burned checks
+
+	// password check
+	if password != paste.Password {
+		return paste, errPasswordRequired
+	}
+
 	return paste, nil
 }

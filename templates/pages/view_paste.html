@@ -3,11 +3,13 @@
     <div class="mt-4"></div>
     <div class="row">
         <div class="col">
-            <h2>{{.Title}}</h2>
+            {{with .Title}}
+            <h2>{{.}}</h2>
+            {{end}}
             <small>Created 3/4/4/</small>
         </div>
         <div class="col-md-auto">
-            <br />
+
             <button type="button" class="btn btn-outline-dark">Copy Contents</button>
             <a href="/paste/raw/{{.ID}}"
                 ><button type="button" class="btn btn-outline-primary">

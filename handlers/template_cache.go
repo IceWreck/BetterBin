@@ -20,6 +20,10 @@ func cacheTemplates() map[string](*template.Template) {
 			"./templates/layout.html",
 			"./templates/pages/view_paste.html",
 		}...)),
+		"password_required": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/password_required.html",
+		}...)),
 		"new_paste": template.Must(template.ParseFiles([]string{
 			"./templates/layout.html",
 			"./templates/pages/new_paste.html",
@@ -27,6 +31,10 @@ func cacheTemplates() map[string](*template.Template) {
 		"new_link": template.Must(template.ParseFiles([]string{
 			"./templates/layout.html",
 			"./templates/pages/new_link.html",
+		}...)),
+		"new_drop": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/new_drop.html",
 		}...)),
 	}
 	return cache
