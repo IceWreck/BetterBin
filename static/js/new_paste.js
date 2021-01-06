@@ -21,7 +21,6 @@ const newPaste = () => {
             title: title,
             expiry: expiry,
             password: password,
-            burn: "0",
             discuss: "0",
         }),
     })
@@ -31,11 +30,21 @@ const newPaste = () => {
         .then(function (data) {
             console.log(data);
             if ("id" in data) {
+                console.log(preview)
+                let previewURLString = "";
+                if (preview == "code") {
+                    previewURLString = "?preview=code";
+                } else if (preview == "markdown") {
+                    previewURLString = "?preview=markdown";
+                }
+
                 let pasteLink =
                     "http://" +
                     window.location.host +
                     "/paste/view/" +
-                    data["id"];
+                    data["id"] +
+                    previewURLString;
+
                 message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
                 newAlert("success", message);
             } else if ("error" in data) {

@@ -42,11 +42,7 @@ func NewLinkForm(w http.ResponseWriter, r *http.Request) {
 
 // NewLinkPage - webpage to make a new shortened link
 func NewLinkPage(w http.ResponseWriter, r *http.Request) {
-	err := templateCache["new_link"].Execute(w, nil)
-	if err != nil {
-		logger.Error(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	renderTemplate(w, "new_link", nil)
 }
 
 // RedirectLink - redirect to complete link

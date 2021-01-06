@@ -20,16 +20,12 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("title")
 	content := r.PostFormValue("content")
 	expiry := r.PostFormValue("expiry")
-	burnStr := r.PostFormValue("burn")
 	discussStr := r.PostFormValue("discuss")
 	password := r.PostFormValue("password")
 
 	// string (technically boolean) input from forms should be converted to ints
 	burn := 0
 	discuss := 0
-	if burnStr == "1" {
-		burn = 1
-	}
 	if discussStr == "1" {
 		discuss = 1
 	}
@@ -57,6 +53,9 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 		expiry = "10 minutes"
 	case "1min":
 		expiry = "1 minutes"
+	case "burn":
+		expiry = "1 month"
+		burn = 1
 	default:
 		// never expire
 		expiry = "999 years"
@@ -74,11 +73,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 
 // NewPastePage - webpage to make a new paste
 func NewPastePage(w http.ResponseWriter, r *http.Request) {
-	err := templateCache["new_paste"].Execute(w, nil)
-	if err != nil {
-		logger.Error(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	renderTemplate(w, "new_paste", nil)
 }
 
 // ViewPastePage - webpage to view a paste
@@ -91,11 +86,7 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, err, http.StatusNotFound)
 		return
 	}
-	err = templateCache["view_paste"].Execute(w, paste)
-	if err != nil {
-		logger.Error(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	renderTemplate(w, "view_paste", paste)
 }
 
 // ViewPasteRaw - curl/wget friendly raw paste contents
@@ -128,6 +119,13 @@ func getPaste(r *http.Request) (db.Paste, error) {
 	// password check
 	if password != paste.Password {
 		return paste, errPasswordRequired
+	}
+
+	preview := r.FormValue("preview")
+	if preview == "code" {
+		paste.Preview = "code"
+	} else if preview == "markdown" {
+		paste.Preview = "markdown"
 	}
 
 	return paste, nil

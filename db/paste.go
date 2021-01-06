@@ -17,6 +17,7 @@ type Paste struct {
 	Title    string `db:"title"`
 	Content  string `db:"content"`
 	Password string `db:"password"`
+	Preview  string
 	Expiry   string `db:"expiry"`
 	Created  string `db:"created"`
 	Burn     int    `db:"burn"`
