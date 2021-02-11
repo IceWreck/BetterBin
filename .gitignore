@@ -1,3 +1,6 @@
 .vscode
 .idea
 out
+dump
+bin
+betterbin.sqlite

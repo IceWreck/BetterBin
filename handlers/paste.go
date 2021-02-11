@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/logger"
@@ -14,6 +15,9 @@ var errPasteExpired = errors.New("paste has expired")
 var errPasteNotFound = errors.New("paste not found")
 var errNoContent = errors.New("no content for new paste")
 var errPasswordRequired = errors.New("password required")
+
+const timeLayout = "2006-01-02 15:04:05"
+
 
 // NewPasteForm (API) - new paste using a POST request
 func NewPasteForm(w http.ResponseWriter, r *http.Request) {
@@ -92,10 +96,7 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 // ViewPasteRaw - curl/wget friendly raw paste contents
 func ViewPasteRaw(w http.ResponseWriter, r *http.Request) {
 	paste, err := getPaste(r)
-	if err == errPasswordRequired {
-		renderError(w, r, err, http.StatusNotFound)
-		return
-	} else if err != nil {
+	if err != nil {
 		renderError(w, r, err, http.StatusNotFound)
 		return
 	}
@@ -114,13 +115,22 @@ func getPaste(r *http.Request) (db.Paste, error) {
 		// error prolly means that it can't find paste
 		return paste, errPasteNotFound
 	}
-	// TODO: add expired/burned checks
-
+	// expiry check
+	expiry, err := time.Parse(timeLayout, paste.Expiry)
+	if err != nil {
+		logger.Error("unable to parse sql datetime", err)
+	}
+	if expiry.Sub(time.Now()) < 0{
+		// expired
+		return paste, errPasteExpired
+	}
 	// password check
 	if password != paste.Password {
 		return paste, errPasswordRequired
 	}
 
+
+	// preview information from query paramater
 	preview := r.FormValue("preview")
 	if preview == "code" {
 		paste.Preview = "code"
