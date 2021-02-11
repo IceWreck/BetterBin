@@ -10,14 +10,12 @@ import (
 	"github.com/go-chi/chi"
 )
 
-var errPasteBurned = errors.New("paste has been burned")
 var errPasteExpired = errors.New("paste has expired")
 var errPasteNotFound = errors.New("paste not found")
 var errNoContent = errors.New("no content for new paste")
 var errPasswordRequired = errors.New("password required")
 
 const timeLayout = "2006-01-02 15:04:05"
-
 
 // NewPasteForm (API) - new paste using a POST request
 func NewPasteForm(w http.ResponseWriter, r *http.Request) {
@@ -86,8 +84,11 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 	if err == errPasswordRequired {
 		renderTemplate(w, "password_required", nil)
 		return
+	} else if err == errPasteExpired {
+		renderTemplate(w, "paste_expired", nil)
+		return
 	} else if err != nil {
-		renderError(w, r, err, http.StatusNotFound)
+		renderTemplate(w, "paste_not_found", nil)
 		return
 	}
 	renderTemplate(w, "view_paste", paste)
@@ -115,20 +116,27 @@ func getPaste(r *http.Request) (db.Paste, error) {
 		// error prolly means that it can't find paste
 		return paste, errPasteNotFound
 	}
+
 	// expiry check
 	expiry, err := time.Parse(timeLayout, paste.Expiry)
 	if err != nil {
 		logger.Error("unable to parse sql datetime", err)
 	}
-	if expiry.Sub(time.Now()) < 0{
+	if expiry.Sub(time.Now()) < 0 {
 		// expired
 		return paste, errPasteExpired
 	}
+
 	// password check
 	if password != paste.Password {
 		return paste, errPasswordRequired
 	}
 
+	// burn paste for future fetches if burn=1
+	if paste.Burn == 1 {
+		logger.Info("burning paste", pasteID)
+		db.BurnPaste(pasteID)
+	}
 
 	// preview information from query paramater
 	preview := r.FormValue("preview")

@@ -46,3 +46,14 @@ func GetPaste(id string) (Paste, error) {
 	}
 	return p, err
 }
+
+// BurnPaste removes a paste with given ID
+func BurnPaste(id string) error {
+	query := `DELETE FROM pastes WHERE id=$1 AND burn=1`
+	_, err := db.Exec(query, id)
+	if err != nil {
+		logger.Error("cannot burn paste", err)
+		return err
+	}
+	return nil
+}
