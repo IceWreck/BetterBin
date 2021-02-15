@@ -21,15 +21,14 @@ type Paste struct {
 	Expiry   string `db:"expiry"`
 	Created  string `db:"created"`
 	Burn     int    `db:"burn"`
-	Discuss  int    `db:"discuss"`
 }
 
 // NewPaste is the db operation to create a new paste in database
-func NewPaste(id string, title string, content string, expiry string, password string, burn int, discuss int) error {
-	query := `INSERT INTO pastes (id, title, content, password, expiry, created, burn,
-			discuss) VALUES ($1, $2, $3, $4, %s, datetime('now'), $5, $6)`
+func NewPaste(id string, title string, content string, expiry string, password string, burn int) error {
+	query := `INSERT INTO pastes (id, title, content, password, expiry, created, burn) 
+	VALUES ($1, $2, $3, $4, %s, datetime('now'), $5)`
 	query = fmt.Sprintf(query, "datetime('now', '+"+expiry+"')")
-	_, err := db.Exec(query, id, title, content, password, burn, discuss)
+	_, err := db.Exec(query, id, title, content, password, burn)
 	if err != nil {
 		logger.Error(err)
 		return errCannotCreatePaste

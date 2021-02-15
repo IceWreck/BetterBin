@@ -22,15 +22,10 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("title")
 	content := r.PostFormValue("content")
 	expiry := r.PostFormValue("expiry")
-	discussStr := r.PostFormValue("discuss")
 	password := r.PostFormValue("password")
 
 	// string (technically boolean) input from forms should be converted to ints
 	burn := 0
-	discuss := 0
-	if discussStr == "1" {
-		discuss = 1
-	}
 
 	// error out if content is empty
 	if len(content) < 1 {
@@ -64,7 +59,7 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 	}
 	pasteID := newID(10)
 	logger.Info("creating new paste", title, pasteID)
-	if err := db.NewPaste(pasteID, title, content, expiry, password, burn, discuss); err != nil {
+	if err := db.NewPaste(pasteID, title, content, expiry, password, burn); err != nil {
 		logger.Info("could not create a new paste")
 		renderError(w, r, err, http.StatusInternalServerError)
 		return
