@@ -38,9 +38,9 @@ func main() {
 	r.Get("/drop/new", handlers.NewDropPage)
 	r.Post("/drop/new", handlers.UploadFile)
 	r.Get("/drop/dl/{dropID}", handlers.Home)
-	fileServer(r, "/drops", http.Dir("./drops")) // download drops
+	handlers.FileServer(r, "/drops", http.Dir("./drops")) // download drops
 	// Static Files (CSS/JS/Images)
-	fileServer(r, "/static", http.Dir("./static"))
+	handlers.FileServer(r, "/static", http.Dir("./static"))
 
 	logger.Info("Starting at :8963")
 	err := http.ListenAndServe(":8963", r)

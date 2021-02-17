@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"net/http"
@@ -7,9 +7,9 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// fileServer conveniently sets up a http.FileServer handler to serve
+// FileServer conveniently sets up a http.FileServer handler to serve
 // static files from a http.FileSystem.
-func fileServer(r chi.Router, path string, root http.FileSystem) {
+func FileServer(r chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
 		panic("fileServer does not permit any URL parameters")
 	}
