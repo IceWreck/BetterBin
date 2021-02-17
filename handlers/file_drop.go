@@ -23,7 +23,6 @@ func NewDropPage(w http.ResponseWriter, r *http.Request) {
 
 // UploadFile - upload a new file
 func UploadFile(w http.ResponseWriter, r *http.Request) {
-	title := r.PostFormValue("title")
 	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
 	if err := r.ParseMultipartForm(maxUploadSize); err != nil {
 		logger.Error("uploaded file too big", err)
@@ -41,6 +40,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	// create file id
 	fileID := newID(10)
+	title := r.PostFormValue("title")
 	newFileName := fileID + filepath.Ext(fileHeader.Filename)
 
 	// create and save file
