@@ -10,6 +10,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+// newID generates and alphanumeric string of given size
 func newID(size int) string {
 	alphanumeric := "1234567890abcdefghijklmnopqrstuvwxz"
 	var sb strings.Builder

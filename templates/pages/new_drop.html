@@ -1,12 +1,35 @@
 {{ define "title" }} New File Drop - BetterBin {{ end }}
 {{ define "body" }}
-    <script src="/static/js/new_link.js"></script>
-    <div class="container">
-        <div class="mt-5"></div>
-        <div id="information-alerts"></div>
-        <h2>File Drop</h2>
-        <hr/>
-        <br/>
-        Planned Feature
-    </div>
+<script src="/static/js/new_drop.js"></script>
+<div class="container">
+    <div class="mt-5"></div>
+    <div id="information-alerts"></div>
+    <h2>File Drop</h2>
+    <hr />
+    <br />
+    <!-- <form enctype="multipart/form-data" action="/drop/new" method="post"> -->
+        
+
+        <div class="input-group">
+            <input
+            type="text"
+            class="form-control"
+            name="title"
+            placeholder="Title"
+            id="title-input"
+            aria-label="Title"
+        />
+            <input
+                type="file"
+                class="form-control"
+                name="upload"
+                aria-label="upload"
+                id="upload-file"
+            />
+            <button class="btn btn-outline-secondary" type="button"  onclick="newDrop()">
+                Upload
+            </button>
+        </div>
+    <!-- </form> -->
+</div>
 {{ end }}

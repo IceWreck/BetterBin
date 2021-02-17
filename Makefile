@@ -1,8 +1,10 @@
+# run code in dev mode
 run:
 	go run .
 
+# generate a binary
 build:
-	go build -o dump/BetterBin .
+	go build -o out/BetterBin .
 
 # required to build with older glibc
 container:
@@ -19,3 +21,7 @@ migrate_up:
 # down one migration
 migrate_down:
 	goose -dir ./db/sql sqlite3 ./betterbin.sqlite down
+
+# migration status
+migrate_status:
+	goose -dir ./db/sql sqlite3 ./betterbin.sqlite status

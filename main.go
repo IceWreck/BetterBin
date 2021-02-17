@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	// TODO: cron like timer to purge expired/burned pastes and drops
+	// TODO: cron like timer to purge expired pastes
 
 	r := chi.NewRouter()
 
@@ -36,13 +36,14 @@ func main() {
 	r.Get("/s/{linkID}", handlers.RedirectLink)
 	// File Drop
 	r.Get("/drop/new", handlers.NewDropPage)
-	r.Post("/drop/new", handlers.Home)
+	r.Post("/drop/new", handlers.UploadFile)
 	r.Get("/drop/dl/{dropID}", handlers.Home)
-
+	fileServer(r, "/drops", http.Dir("./drops")) // download drops
+	// Static Files (CSS/JS/Images)
 	fileServer(r, "/static", http.Dir("./static"))
 
-	logger.Info("Starting at :8000")
-	err := http.ListenAndServe(":8000", r)
+	logger.Info("Starting at :8963")
+	err := http.ListenAndServe(":8963", r)
 	if err != nil {
 		logger.Error(err)
 	}
