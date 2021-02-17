@@ -22,10 +22,7 @@ const newDrop = () => {
             console.log(data);
             if ("id" in data) {
                 let downloadLink =
-                    "http://" +
-                    window.location.host +
-                    "/drop/dl/" +
-                    data["id"];
+                    "http://" + window.location.host + "/drop/dl/" + data["id"];
                 message = `The uploaded file is at <a href="${downloadLink}" class="alert-link">${downloadLink}</a>.`;
                 newAlert("success", message);
             } else if ("error" in data) {
@@ -33,5 +30,9 @@ const newDrop = () => {
             } else {
                 newAlert("danger", "An unknown error occurred.");
             }
+        })
+        .catch((error) => {
+            console.log(error);
+            newAlert("danger", "An unknown error occurred. Check your file size.");
         });
 };

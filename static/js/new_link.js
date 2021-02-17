@@ -34,5 +34,8 @@ const newLink = () => {
             } else {
                 newAlert("danger", "An unknown error occurred.");
             }
+        }).catch((error) => {
+            console.log(error);
+            newAlert("danger", "An unknown error occurred.");
         });
 };

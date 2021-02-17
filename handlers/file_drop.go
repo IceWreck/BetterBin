@@ -11,7 +11,7 @@ import (
 	"github.com/IceWreck/BetterBin/logger"
 )
 
-const maxUploadSize = 1
+const maxUploadSize = 1024 * 1024 * 10 // 10MB
 
 var errUploadingFile = errors.New("error uploading file")
 var errFileTooLarge = errors.New("uploaded file is too big")
