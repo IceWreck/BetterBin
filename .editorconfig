@@ -1,0 +1,12 @@
+root = true
+
+[*.go]
+indent_style = tab
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+
+[*.{js,py}]
+indent_style = space
+indent_size = 4
