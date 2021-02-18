@@ -9,12 +9,14 @@ import (
 
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/logger"
+	"github.com/go-chi/chi"
 )
 
 const maxUploadSize = 1024 * 1024 * 10 // 10MB
 
 var errUploadingFile = errors.New("error uploading file")
 var errFileTooLarge = errors.New("uploaded file is too big")
+var errDropNotFound = errors.New("drop not found")
 
 // NewDropPage - webpage to make a new file drop
 func NewDropPage(w http.ResponseWriter, r *http.Request) {
@@ -67,4 +69,29 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("uploaded", newFileName, "size", fileHeader.Size)
 	renderSuccess(w, r, fileID)
+}
+
+// ViewDrop - preview and download file drop
+func ViewDrop(w http.ResponseWriter, r *http.Request) {
+	dropID := chi.URLParam(r, "dropID")
+	drop, err := db.GetDrop(dropID)
+	if err != nil {
+		renderError(w, r, errDropNotFound, http.StatusBadRequest)
+		return
+	}
+	// preview type for formats that the browser can display natively
+	switch filepath.Ext(drop.FileName) {
+	case ".jpg", ".jpeg", ".webp", ".png", ".gif":
+		drop.Preview = "image"
+		logger.Debug("preview image")
+	case ".mp4", ".webm":
+		drop.Preview = "video"
+		logger.Debug("preview video")
+	default:
+		drop.Preview = "none"
+		logger.Debug("no preview")
+
+	}
+
+	renderTemplate(w, "view_drop", drop)
 }

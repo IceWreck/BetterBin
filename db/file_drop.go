@@ -16,6 +16,7 @@ type FileDrop struct {
 	Title    string `db:"title"`
 	Created  string `db:"created"`
 	FileName string `db:"filename"`
+	Preview  string
 }
 
 // NewDrop is the db operation to create a new file drop in database

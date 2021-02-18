@@ -1,0 +1,25 @@
+{{ define "title" }} Downlaod File - BetterBin {{ end }}
+{{ define "body" }}
+<div class="container">
+    <div class="mt-5"></div>
+    <div id="information-alerts"></div>
+    <h2>Drop - {{ .Title }} <i class="text-primary">{{ .ID }}</i> </h2>
+    <hr />
+    <br />
+    {{ if eq .Preview "image"}}
+    <img src="/drops/{{ .FileName}}" class="img-fluid" alt="{{ .Title}}" style="border-radius: 1rem;">
+    <br/>
+    <br/>
+    {{ end }}
+    {{ if eq .Preview "video"}}
+    <video controls>
+        <source src="/drops/{{ .FileName}}">
+    </video>
+    <br/>
+    <br/>
+    {{ end }}
+
+        <a href="/drops/{{ .FileName}}" class="btn btn-primary btn-lg">Download</a>
+        
+</div>
+{{ end }}

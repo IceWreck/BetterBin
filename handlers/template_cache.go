@@ -36,6 +36,10 @@ func cacheTemplates() map[string](*template.Template) {
 			"./templates/layout.html",
 			"./templates/pages/new_drop.html",
 		}...)),
+		"view_drop": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/view_drop.html",
+		}...)),
 		"paste_expired": template.Must(template.ParseFiles([]string{
 			"./templates/layout.html",
 			"./templates/pages/paste_expired.html",

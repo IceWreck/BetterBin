@@ -37,7 +37,7 @@ func main() {
 	// File Drop
 	r.Get("/drop/new", handlers.NewDropPage)
 	r.Post("/drop/new", handlers.UploadFile)
-	r.Get("/drop/dl/{dropID}", handlers.Home)
+	r.Get("/drop/dl/{dropID}", handlers.ViewDrop)
 	handlers.FileServer(r, "/drops", http.Dir("./drops")) // download drops
 	// Static Files (CSS/JS/Images)
 	handlers.FileServer(r, "/static", http.Dir("./static"))
