@@ -9,9 +9,9 @@
     <br />
     <!-- <form enctype="multipart/form-data" action="/drop/new" method="post"> -->
         
-
-        <div class="input-group">
-            <input
+        <div class="row">
+            <div class="col-sm">
+                <input
             type="text"
             class="form-control"
             name="title"
@@ -19,17 +19,25 @@
             id="title-input"
             aria-label="Title"
         />
-            <input
-                type="file"
-                class="form-control"
-                name="upload"
-                aria-label="upload"
-                id="upload-file"
-            />
-            <button class="btn btn-outline-secondary" type="button"  onclick="newDrop()">
-                Upload
-            </button>
-        </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group">
+          
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="upload"
+                        aria-label="upload"
+                        id="upload-file"
+                    />
+                    <button class="btn btn-outline-secondary" type="button"  onclick="newDrop()">
+                        Upload
+                    </button>
+                </div>
+            </div>
+          </div>
+
+        
     <!-- </form> -->
 </div>
 {{ end }}
