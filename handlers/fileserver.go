@@ -23,7 +23,19 @@ func FileServer(r chi.Router, path string, root http.FileSystem) {
 	r.Get(path, func(w http.ResponseWriter, r *http.Request) {
 		rctx := chi.RouteContext(r.Context())
 		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
-		fs := http.StripPrefix(pathPrefix, http.FileServer(root))
+		fs := http.StripPrefix(pathPrefix, neuter(http.FileServer(root)))
 		fs.ServeHTTP(w, r)
+	})
+}
+
+// neuter is middleware thats prevents http.FileServer from serving directory listings
+// without this going to /drops will give a listing of all stored drops
+func neuter(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/") {
+			http.NotFound(w, r)
+			return
+		}
+		next.ServeHTTP(w, r)
 	})
 }
