@@ -76,7 +76,7 @@ func ViewDrop(w http.ResponseWriter, r *http.Request) {
 	dropID := chi.URLParam(r, "dropID")
 	drop, err := db.GetDrop(dropID)
 	if err != nil {
-		renderError(w, r, errDropNotFound, http.StatusBadRequest)
+		renderTemplate(w, "drop_not_found", nil)
 		return
 	}
 	// preview type for formats that the browser can display natively

@@ -48,6 +48,10 @@ func cacheTemplates() map[string](*template.Template) {
 			"./templates/layout.html",
 			"./templates/pages/paste_not_found.html",
 		}...)),
+		"drop_not_found": template.Must(template.ParseFiles([]string{
+			"./templates/layout.html",
+			"./templates/pages/drop_not_found.html",
+		}...)),
 	}
 	return cache
 }
