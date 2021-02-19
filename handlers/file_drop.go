@@ -68,7 +68,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Info("uploaded", newFileName, "size", fileHeader.Size)
-	renderSuccess(w, r, fileID)
+	renderDropSuccess(w, r, fileID, newFileName)
 }
 
 // ViewDrop - preview and download file drop
