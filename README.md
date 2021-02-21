@@ -1,5 +1,5 @@
 # BetterBin
-<img src="./assets/scrot1.png" width=600>
+<img src="./files/scrot1.png" width=600>
 <br/>
 Self-hosted pastebin, link shortner and file drop solution.
 
@@ -16,16 +16,18 @@ Self-hosted pastebin, link shortner and file drop solution.
 ## API Documentation
 
 ### Pastebin
-
+TBA
 ### Link Shortner
-
+TBA
 ### File Drop
+TBA
 
 ## Deployment Instructions
 
 ### Manually
-
+TBA
 ### Docker
+TBA
 
 ## Contributing
 
