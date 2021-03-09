@@ -2,7 +2,7 @@
 
 Self-hosted pastebin, link shortner and file drop solution with an API.
 
-<img src="./files/web_hi_res_512.png" width=100 style="border-radius: 15px 50px 30px">
+<img src="./files/web_hi_res_512.png" width=200>
 <br/>
 
 ## Features
