@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # run migrations
-./goose -dir ./db/sql sqlite3 ./betterbin.sqlite up
+touch /home/betterbin/app/data/betterbin.sqlite
+./goose -dir ./db/sql sqlite3 /home/betterbin/app/data/betterbin.sqlite up
 # run BetterBin
-./BetterBin
+./BetterBin -p 8963 -d /home/betterbin/app/data/betterbin.sqlite

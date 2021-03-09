@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/handlers"
 	"github.com/IceWreck/BetterBin/logger"
 	"github.com/go-chi/chi"
@@ -13,6 +15,7 @@ import (
 func main() {
 
 	// TODO: cron like timer to purge expired pastes
+	// until then server admin can manually view database to see expired pastes
 
 	r := chi.NewRouter()
 
@@ -42,8 +45,8 @@ func main() {
 	// Static Files (CSS/JS/Images)
 	handlers.FileServer(r, "/static", http.Dir("./static"))
 
-	logger.Info("Starting at :8963")
-	err := http.ListenAndServe(":8963", r)
+	logger.Info("Starting at port", *config.Port)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", *config.Port), r)
 	if err != nil {
 		logger.Error(err)
 	}

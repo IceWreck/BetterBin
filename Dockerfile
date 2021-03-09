@@ -32,6 +32,7 @@ RUN chmod +x /home/betterbin/app/container-entrypoint.sh
 USER betterbin
 
 RUN mkdir -p /home/betterbin/app/drops
+RUN mkdir -p /home/betterbin/app/data
 
 WORKDIR /home/betterbin/app
 
