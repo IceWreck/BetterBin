@@ -1,78 +1,81 @@
 {{ define "title" }} New Paste - BetterBin {{ end }}
 {{ define "body" }}
-    <script src="/static/js/new_paste.js"></script>
-    <div class="container paste-container">
-        <div class="mt-4"></div>
-        <div id="information-alerts"></div>
-        <form>
-            <div class="row">
-                <div class="col-sm">
-                    <input
-                            type="text"
-                            autocomplete="new-password"
-                            class="form-control"
-                            id="input-paste-title"
-                            aria-describedby="inputTitle"
-                            placeholder="Title (optional)"
-                    />
-                </div>
-                <div class="col-sm">
-                    <input
-                            type="password"
-                            autocomplete="new-password"
-                            class="form-control"
-                            id="input-paste-password"
-                            aria-describedby="inputPassword"
-                            placeholder="Password (optional)"
-                    />
-                </div>
-                <div class="col-sm">
-                    <select
-                            id="input-paste-view-type"
-                            class="form-select"
-                            aria-label="View Type"
-                    >
-                        <option value="plaintext">Plain Text</option>
-                        <option value="markdown">Markdown</option>
-                        <option value="code">Source Code</option>
-                    </select>
-                </div>
-                <div class="col-sm">
-                    <select
-                            id="input-paste-expiry"
-                            class="form-select"
-                            aria-label="Expiry"
-                    >
-                        <option value="never">Never expire</option>
-                        <option value="burn">Burn after reading</option>
-                        <option value="year">Expiry: 1 Year</option>
-                        <option value="month">Expiry: 1 Month</option>
-                        <option value="week">Expiry: 1 Week</option>
-                        <option value="day">Expiry: 1 Day</option>
-                        <option value="hour">Expiry: 1 Hour</option>
-                        <option value="10min">Expiry: 10 Minutes</option>
-                        <option value="1min">Expiry: 1 Minute</option>
-                    </select>
-                </div>
-                <div class="col-sm">
-                    <button
-                            type="button"
-                            class="btn btn-outline-primary"
-                            onclick="newPaste()"
-                    >
-                        Create
-                    </button>
-                </div>
+<script src="/static/js/new_paste.js"></script>
+<div class="container paste-container">
+    <div class="mt-4"></div>
+    <div id="information-alerts"></div>
+    <form>
+        <div class="row">
+            <div class="col-sm">
+                <input
+                        type="text"
+                        autocomplete="new-password"
+                        class="form-control"
+                        id="input-paste-title"
+                        aria-describedby="inputTitle"
+                        placeholder="Title (optional)"
+                />
             </div>
-            <hr/>
-            <textarea
-                    autofocus
-                    class="form-control view-plaintext text-monospace"
-                    id="input-paste-content"
-                    placeholder="Paste Content (must not be empty)"
-                    rows="20"
-                    required
-            ></textarea>
-        </form>
-    </div>
+            <div class="col-sm">
+                <input
+                        type="password"
+                        autocomplete="new-password"
+                        class="form-control"
+                        id="input-paste-password"
+                        aria-describedby="inputPassword"
+                        placeholder="Password (optional)"
+                />
+            </div>
+            <div class="col-sm">
+                <select
+                        id="input-paste-view-type"
+                        class="form-select"
+                        aria-label="View Type"
+                >
+                    <option value="plaintext">Plain Text</option>
+                    <option value="markdown">Markdown</option>
+                    <option value="code">Source Code</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <select
+                        id="input-paste-expiry"
+                        class="form-select"
+                        aria-label="Expiry"
+                >
+                    <option value="never">Never expire</option>
+                    <option value="burn">Burn after reading</option>
+                    <option value="year">Expiry: 1 Year</option>
+                    <option value="month">Expiry: 1 Month</option>
+                    <option value="week">Expiry: 1 Week</option>
+                    <option value="day">Expiry: 1 Day</option>
+                    <option value="hour">Expiry: 1 Hour</option>
+                    <option value="10min">Expiry: 10 Minutes</option>
+                    <option value="1min">Expiry: 1 Minute</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        onclick="newPaste()"
+                >
+                    Create
+                </button>
+            </div>
+        </div>
+        <hr/>
+        <textarea
+                autofocus
+                class="form-control view-plaintext text-monospace"
+                id="input-paste-content"
+                placeholder='{{template "pasteplaceholder" .}}'
+                rows="20"
+                required
+        ></textarea>
+    </form>
+</div>
+{{ end }}
+{{ define "pasteplaceholder" }}Paste Content (must not be empty)
+Submit by pressing the &#39;Create&#39; button or Ctrl + Enter.
 {{ end }}

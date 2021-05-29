@@ -30,7 +30,7 @@ const newPaste = () => {
         .then(function (data) {
             console.log(data);
             if ("id" in data) {
-                console.log(preview)
+                // console.log(preview)
                 let previewURLString = "";
                 if (preview == "code") {
                     previewURLString = "?preview=code";
@@ -45,15 +45,27 @@ const newPaste = () => {
                     data["id"] +
                     previewURLString;
 
-                message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
-                newAlert("success", message);
+                // open the view paste page
+                window.location.href = pasteLink
+
+                // or you can create a new alert with the link
+
+                // message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
+                // newAlert("success", message);
             } else if ("error" in data) {
                 newAlert("danger", `Error: ${data["error"]}.`);
             } else {
                 newAlert("danger", "An unknown error occurred.");
             }
         }).catch((error) => {
-            console.log(error);
-            newAlert("danger", "An unknown error occurred.");
-        });
+        console.log(error);
+        newAlert("danger", "An unknown error occurred.");
+    });
 };
+
+// submit on Ctrl + Enter (can also press the create button)
+document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
+        newPaste();
+    }
+});
