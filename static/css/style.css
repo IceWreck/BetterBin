@@ -1,6 +1,7 @@
 main > .container {
     padding: 60px 15px 0;
 }
+
 .view-plaintext {
     padding: 1.5rem;
     background-color: #f7f7f9;
@@ -22,8 +23,16 @@ main > .container {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    text-align: centre;
+    text-align: center;
     color: #a0a1a7;
     border-right: 20px solid transparent;
     vertical-align: top;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

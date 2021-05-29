@@ -1,50 +1,50 @@
 {{ define "title" }} View Paste - BetterBin {{ end }}
 {{ define "body" }}
-    {{ if eq .Preview "code"}}
-        <link
-                rel="stylesheet"
-                href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/atom-one-light.min.css"
-        />
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-        <script src="//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js"></script>
-    {{ end }}
-    {{ if eq .Preview "markdown"}}
-        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-        <script>
-            // needed because if we get it directly from pre tag then markdown parser gets
-            // html shortcodes instead of angle brackets and messes up some markdown
-            // its possible to just do this and not send server rendered content at all
-            // but then no javascript browsers wont even be able to read the paste
-            const pasteContents = "{{.Content}}";
-        </script>
-    {{ end }}
-    <div class="container paste-container">
-        <div class="mt-4"></div>
-        <div class="row">
-            <div class="col">
-                {{with .Title}}
-                    <h2>{{.}}</h2>
-                {{end}}
-                <small>Created {{.Created}} UTC</small>
-            </div>
-            <div class="col-md-auto">
-                <!-- <button type="button" class="btn btn-outline-dark" onclick="copyContents()">
-                    Copy Contents
-                </button> -->
-                <a href="/paste/raw/{{.ID}}"
-                >
-                    <button type="button" class="btn btn-outline-primary">
-                        Raw
-                    </button>
-                </a
-                >
-            </div>
+{{ if eq .Preview "code"}}
+<link
+        rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/atom-one-light.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js"></script>
+{{ end }}
+{{ if eq .Preview "markdown"}}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    // needed because if we get it directly from pre tag then markdown parser gets
+    // html shortcodes instead of angle brackets and messes up some markdown
+    // its possible to just do this and not send server rendered content at all
+    // but then no javascript browsers wont even be able to read the paste
+    const pasteContents = "{{.Content}}";
+</script>
+{{ end }}
+<div class="container paste-container">
+    <div class="mt-4"></div>
+    <div class="row unselectable">
+        <div class="col">
+            {{with .Title}}
+            <h2>{{.}}</h2>
+            {{end}}
+            <small>Created {{.Created}} UTC</small>
         </div>
-        <hr/>
-        <div id="paste-preview" class="view-plaintext">
-            <pre><code id="paste-contents">{{.Content}}</code></pre>
+        <div class="col-md-auto">
+            <!-- <button type="button" class="btn btn-outline-dark" onclick="copyContents()">
+                Copy Contents
+            </button> -->
+            <a href="/paste/raw/{{.ID}}"
+            >
+                <button type="button" class="btn btn-outline-primary">
+                    Raw
+                </button>
+            </a
+            >
         </div>
     </div>
-    <script src="/static/js/view_paste.js"></script>
+    <hr/>
+    <div id="paste-preview" class="view-plaintext">
+        <pre><code id="paste-contents">{{.Content}}</code></pre>
+    </div>
+</div>
+<script src="/static/js/view_paste.js"></script>
 
 {{ end }}
