@@ -96,6 +96,7 @@ func ViewPasteRaw(w http.ResponseWriter, r *http.Request) {
 		renderError(w, r, err, http.StatusNotFound)
 		return
 	}
+	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte(paste.Content))
 }
 
