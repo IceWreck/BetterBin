@@ -25,7 +25,10 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Get("/", handlers.Home)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/paste/new", http.StatusTemporaryRedirect)
+	})
+	r.Get("/home", handlers.Home)
 	// Paste Bin
 	r.Get("/paste/new", handlers.NewPastePage)
 	r.Post("/paste/new", handlers.NewPasteForm)
