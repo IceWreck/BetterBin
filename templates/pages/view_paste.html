@@ -1,16 +1,6 @@
 {{ define "title" }} View Paste - BetterBin {{ end }}
-{{ define "body" }}
 
-{{ if eq .Preview "markdown"}}
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-    // needed because if we get it directly from pre tag then markdown parser gets
-    // html shortcodes instead of angle brackets and messes up some markdown
-    // its possible to just do this and not send server rendered content at all
-    // but then no javascript browsers wont even be able to read the paste
-    const pasteContents = "{{.Content}}";
-</script>
-{{ end }}
+{{ define "body" }}
 <div class="container paste-container">
     <div class="mt-4"></div>
     <div class="row unselectable">
@@ -35,12 +25,17 @@
     </div>
     <hr/>
     {{ if eq .Preview "code"}}
-    <div id="paste-preview" class="view-code">
-        {{.ContentHTML}}
+        <div id="paste-preview" class="view-code">
+            {{.ContentHTML}}
+        </div>
+    {{ else if eq .Preview "markdown"}}
+        <div id="paste-preview" class="view-markdown">
+            {{.ContentHTML}}
+        </div>
     {{ else }}
-    <div id="paste-preview" class="view-plaintext">
-        <pre><code id="paste-contents">{{.Content}}</code></pre>
-    </div>
+        <div id="paste-preview" class="view-plaintext">
+            <pre><code id="paste-contents">{{.Content}}</code></pre>
+        </div>
     {{ end }}
 
 </div>

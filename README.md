@@ -37,9 +37,12 @@ All paths are relative to your deployment, like `betterbin.example.com`. In the 
 **GET/POST `/paste/view/{pasteID}`** -> html :
 
 -   Parameter `password` - If that paste is password protected. You can also enter the password in the web page when prompted. (Optional.)
--   Parameter `preview` - Preview type. One of `markdown`, `code` and `plain`. (Optional.)
+-   Parameter `preview` - Preview type. One of `markdown`, `code` and `plain`. If its value is `code` and the `lang` param doesn't exist or is empty then it will try to automatically determine the code type. (Optional.)
+-   Parameter `lang` - Language extension for advanced syntax highlighting. No need for the `preview` parameter if you add this. Example values are `go`, `py`, `rs`. (Optional.)
 
-Example `betterbin.example.com/paste/view/{pasteID}?preview=code`
+
+Example `betterbin.example.com/paste/view/{pasteID}?preview=code` or `betterbin.example.com/paste/view/{pasteID}?lang=sql`
+or `betterbin.example.com/paste/view/{pasteID}?preview=markdown`
 
 **GET/POST `/paste/raw/{pasteID}`** -> raw text :
 

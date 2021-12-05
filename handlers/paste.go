@@ -14,6 +14,10 @@ import (
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
 	"github.com/go-chi/chi/v5"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	goldmarkhtml "github.com/yuin/goldmark/renderer/html"
 )
 
 var errPasteExpired = errors.New("paste has expired")
@@ -71,7 +75,6 @@ func NewPasteForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	renderSuccess(w, r, pasteID)
-	return
 }
 
 // NewPastePage - webpage to make a new paste
@@ -121,6 +124,23 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 			// just use the plaintext preview type if no lexer was found
 			paste.Preview = "plain"
 		}
+	} else if paste.Preview == "markdown" {
+		htmlw := new(strings.Builder)
+		md := goldmark.New(
+			goldmark.WithExtensions(extension.GFM),
+			goldmark.WithParserOptions(
+				parser.WithAutoHeadingID(),
+			),
+			goldmark.WithRendererOptions(
+				goldmarkhtml.WithHardWraps(),
+				goldmarkhtml.WithXHTML(),
+			),
+		)
+		if err := md.Convert([]byte(paste.Content), htmlw); err != nil {
+			logger.Error("markdown conversion error", err)
+			paste.Preview = "plain"
+		}
+		paste.ContentHTML = template.HTML(htmlw.String())
 	}
 
 	renderTemplate(w, "view_paste", paste)
