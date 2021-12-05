@@ -1,13 +1,6 @@
 {{ define "title" }} View Paste - BetterBin {{ end }}
 {{ define "body" }}
-{{ if eq .Preview "code"}}
-<link
-        rel="stylesheet"
-        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/atom-one-light.min.css"
-/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js"></script>
-{{ end }}
+
 {{ if eq .Preview "markdown"}}
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
@@ -41,9 +34,15 @@
         </div>
     </div>
     <hr/>
+    {{ if eq .Preview "code"}}
+    <div id="paste-preview" class="view-code">
+        {{.ContentHTML}}
+    {{ else }}
     <div id="paste-preview" class="view-plaintext">
         <pre><code id="paste-contents">{{.Content}}</code></pre>
     </div>
+    {{ end }}
+
 </div>
 <script src="/static/js/view_paste.js"></script>
 

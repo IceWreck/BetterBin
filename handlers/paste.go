@@ -2,12 +2,18 @@ package handlers
 
 import (
 	"errors"
+	"html/template"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/logger"
-	"github.com/go-chi/chi"
+	"github.com/alecthomas/chroma"
+	"github.com/alecthomas/chroma/formatters/html"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
+	"github.com/go-chi/chi/v5"
 )
 
 var errPasteExpired = errors.New("paste has expired")
@@ -86,6 +92,37 @@ func ViewPastePage(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, "paste_not_found", nil)
 		return
 	}
+
+	if paste.Preview == "code" {
+		htmlw := new(strings.Builder)
+		lexer := lexers.Match("foo." + paste.PreviewLanguage)
+		// if that didn't math try auto analyze
+		if lexer == nil {
+			lexer = lexers.Analyse(paste.Content)
+		}
+		// only proceed if that worked
+		if lexer != nil {
+			logger.Debug("found lexer", lexer.Config().Name)
+			lexer = chroma.Coalesce(lexer)
+			formatter := html.New(html.WithLineNumbers(true), html.LineNumbersInTable(true))
+			iterator, err := lexer.Tokenise(nil, paste.Content)
+			if err == nil {
+				err = formatter.Format(htmlw, styles.Colorful, iterator)
+				if err != nil {
+					logger.Error("syntax formatting error", err)
+				} else {
+					// logger.Debug("syntax highlighted HTML is ", htmlw.String())
+					paste.ContentHTML = template.HTML(htmlw.String())
+				}
+			} else {
+				logger.Error("syntax tokenization error", err)
+			}
+		} else {
+			// just use the plaintext preview type if no lexer was found
+			paste.Preview = "plain"
+		}
+	}
+
 	renderTemplate(w, "view_paste", paste)
 }
 
@@ -140,6 +177,13 @@ func getPaste(r *http.Request) (db.Paste, error) {
 		paste.Preview = "code"
 	} else if preview == "markdown" {
 		paste.Preview = "markdown"
+	}
+
+	// check if the lang query parameter exists
+	_, langParamExists := r.Form["lang"]
+	if langParamExists {
+		paste.Preview = "code"
+		paste.PreviewLanguage = r.FormValue("lang")
 	}
 
 	return paste, nil

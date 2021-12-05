@@ -8,8 +8,8 @@ import (
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/handlers"
 	"github.com/IceWreck/BetterBin/logger"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {

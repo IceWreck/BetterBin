@@ -33,7 +33,7 @@ const newPaste = () => {
                 // console.log(preview)
                 let previewURLString = "";
                 if (preview == "code") {
-                    previewURLString = "?preview=code";
+                    previewURLString = "?lang=";
                 } else if (preview == "markdown") {
                     previewURLString = "?preview=markdown";
                 }

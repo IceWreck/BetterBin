@@ -7,7 +7,7 @@ import (
 
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/logger"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 var errInvalidLink = errors.New("invalid link")

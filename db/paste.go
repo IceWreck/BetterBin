@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"html/template"
 
 	"github.com/IceWreck/BetterBin/logger"
 )
@@ -13,14 +14,16 @@ var errCannotCreatePaste = errors.New("cannot create a new paste")
 
 // Paste symbolizes a single paste
 type Paste struct {
-	ID       string `db:"id"`
-	Title    string `db:"title"`
-	Content  string `db:"content"`
-	Password string `db:"password"`
-	Preview  string
-	Expiry   string `db:"expiry"`
-	Created  string `db:"created"`
-	Burn     int    `db:"burn"`
+	ID              string `db:"id"`
+	Title           string `db:"title"`
+	Content         string `db:"content"`
+	Password        string `db:"password"`
+	Preview         string // One of `markdown`, `code` and `plain`.
+	PreviewLanguage string // Code preview language extension.
+	ContentHTML     template.HTML
+	Expiry          string `db:"expiry"`
+	Created         string `db:"created"`
+	Burn            int    `db:"burn"`
 }
 
 // NewPaste is the db operation to create a new paste in database
