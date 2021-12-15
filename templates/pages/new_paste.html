@@ -1,6 +1,5 @@
 {{ define "title" }} New Paste - BetterBin {{ end }}
 {{ define "body" }}
-<script src="/static/js/new_paste.js"></script>
 <div class="container paste-container">
     <div class="mt-4"></div>
     <div id="information-alerts"></div>
@@ -58,7 +57,7 @@
                 <button
                         type="button"
                         class="btn btn-outline-primary"
-                        onclick="newPaste()"
+                        onclick="newPaste(true)"
                 >
                     Create
                 </button>
@@ -75,7 +74,10 @@
         ></textarea>
     </form>
 </div>
+<script src="/static/js/new_paste.js"></script>
 {{ end }}
+
+
 {{ define "pasteplaceholder" }}Paste Content (must not be empty)
 Submit by pressing the &#39;Create&#39; button or Ctrl + Enter.
 {{ end }}

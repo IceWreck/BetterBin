@@ -1,4 +1,7 @@
-const newPaste = () => {
+// Create a new paste.
+// If openImmidiately is true then the user will be redirected to new paste.
+// Otherwise a green/success alertbox will show new link.
+const newPaste = (openImmidiately) => {
     const title = document.getElementById("input-paste-title").value;
     const password = document.getElementById("input-paste-password").value;
     const content = document.getElementById("input-paste-content").value;
@@ -45,27 +48,49 @@ const newPaste = () => {
                     data["id"] +
                     previewURLString;
 
-                // open the view paste page
-                window.location.href = pasteLink
 
-                // or you can create a new alert with the link
+                // if paste is burn on reading then open immidiately would render it useless
+                if (!openImmidiately || expiry === "burn") {
 
-                // message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
-                // newAlert("success", message);
+                    // create a new alert with the link
+
+                    message = `Your paste has been created at <a href="${pasteLink}" class="alert-link">${pasteLink}</a>.`;
+                    newAlert("success", message);
+
+                } else {
+                    // open the view paste page
+                    window.location.href = pasteLink
+                }
+
             } else if ("error" in data) {
                 newAlert("danger", `Error: ${data["error"]}.`);
             } else {
                 newAlert("danger", "An unknown error occurred.");
             }
         }).catch((error) => {
-        console.log(error);
-        newAlert("danger", "An unknown error occurred.");
-    });
+            console.log(error);
+            newAlert("danger", "An unknown error occurred.");
+        });
 };
 
-// submit on Ctrl + Enter (can also press the create button)
+// Submit on Ctrl + Enter (can also press the create button).
 document.body.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.ctrlKey) {
-        newPaste();
+        newPaste(true);
     }
 });
+
+
+// On pressing tab, add relevant space.
+// This is still different from a real tab because real tab gets you to next
+// nearest multiple of TAB_SIZE and not just add TAB_SIZE to cursor postiton.
+const contentArea = document.getElementById("input-paste-content");
+contentArea.onkeydown = (event) => {
+    if (event.key === 'Tab') {
+        console.log("tabekey pressed")
+        event.preventDefault();
+        // add 1 tab = 4 spaces
+        contentArea.value += "    ";
+        contentArea.focus();
+    }
+}
