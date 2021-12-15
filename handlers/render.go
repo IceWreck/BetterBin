@@ -25,7 +25,6 @@ func renderError(w http.ResponseWriter, r *http.Request, err error, status int) 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(data)
-	return
 }
 
 func renderSuccess(w http.ResponseWriter, r *http.Request, id string) {
@@ -33,7 +32,6 @@ func renderSuccess(w http.ResponseWriter, r *http.Request, id string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
-	return
 }
 
 func renderDropSuccess(w http.ResponseWriter, r *http.Request, id string, filename string) {
@@ -41,7 +39,6 @@ func renderDropSuccess(w http.ResponseWriter, r *http.Request, id string, filena
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
-	return
 }
 
 func renderTemplate(w http.ResponseWriter, template string, data interface{}) {
@@ -50,5 +47,4 @@ func renderTemplate(w http.ResponseWriter, template string, data interface{}) {
 		logger.Error(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
-	return
 }

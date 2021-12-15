@@ -37,7 +37,6 @@ func NewLinkForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	renderSuccess(w, r, linkID)
-	return
 }
 
 // NewLinkPage - webpage to make a new shortened link

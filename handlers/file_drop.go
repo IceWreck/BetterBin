@@ -47,12 +47,12 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	// create and save file
 	newFile, err := os.Create("./drops/" + newFileName)
-	defer newFile.Close()
 	if err != nil {
 		logger.Error("error uploading file", err)
 		renderError(w, r, errUploadingFile, http.StatusInternalServerError)
 		return
 	}
+	defer newFile.Close()
 	if _, err := io.Copy(newFile, file); err != nil {
 		logger.Error("error uploading file", err)
 		renderError(w, r, errUploadingFile, http.StatusInternalServerError)
