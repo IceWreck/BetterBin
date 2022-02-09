@@ -86,6 +86,10 @@ or `betterbin.example.com/paste/view/{pasteID}?preview=markdown`.
 
 `curl --data-urlencode content@somefile.txt https://betterbin.example.com/paste/new`
 
+**Create a new file drop using curl**
+
+`curl --form upload='@some-file.zip' https://betterbin.example.com/drop/new`
+
 ## Deployment Instructions
 
 ### Manually
