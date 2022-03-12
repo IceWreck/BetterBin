@@ -2,9 +2,13 @@ package handlers
 
 import (
 	"net/http"
+
+	"github.com/IceWreck/BetterBin/config"
 )
 
-// Home Page
-func Home(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "home", nil)
+// home Page
+func home(app *config.Application) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		renderTemplate(w, "home", nil)
+	}
 }

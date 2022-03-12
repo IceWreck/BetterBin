@@ -2,21 +2,17 @@ package db
 
 import (
 	"github.com/IceWreck/BetterBin/config"
-	"github.com/IceWreck/BetterBin/logger"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // sqlite driver
 )
 
-var db *sqlx.DB
-
-func init() {
-	var err error
-
-	db, err = sqlx.Open("sqlite3", *config.DatabasePath)
+func ConnectDB(app *config.Application) {
+	db, err := sqlx.Open("sqlite3", app.Config.DatabasePath)
 	err = db.Ping()
 	if err != nil {
-		logger.Fatal("cannot connect to db")
+		app.Logger.Fatal().Err(err).Msg("Cannot connect to db")
 	} else {
-		logger.Info("connected to db")
+		app.DB = db
+		app.Logger.Info().Msg("Connected to db")
 	}
 }

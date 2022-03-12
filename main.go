@@ -3,53 +3,41 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/IceWreck/BetterBin/config"
+	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/handlers"
 	"github.com/IceWreck/BetterBin/logger"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/rs/zerolog"
 )
 
 func main() {
 
+	app := &config.Application{
+		Logger: zerolog.New(
+			zerolog.ConsoleWriter{
+				Out:        os.Stdout,
+				TimeFormat: time.RFC822,
+			},
+		).With().Timestamp().Logger(),
+	}
+
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+
+	app.Config = config.LoadConfig(app)
+
+	db.ConnectDB(app)
+
 	// TODO: cron like timer to purge expired pastes
 	// until then server admin can manually view database to see expired pastes
 
-	r := chi.NewRouter()
+	// Initialize Router
+	r := handlers.Routes(app)
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/paste/new", http.StatusTemporaryRedirect)
-	})
-	r.Get("/home", handlers.Home)
-	// Paste Bin
-	r.Get("/paste/new", handlers.NewPastePage)
-	r.Post("/paste/new", handlers.NewPasteForm)
-	r.Get("/paste/view/{pasteID}", handlers.ViewPastePage)
-	r.Get("/paste/raw/{pasteID}", handlers.ViewPasteRaw)
-	r.Post("/paste/view/{pasteID}", handlers.ViewPastePage) // required for password
-	r.Post("/paste/raw/{pasteID}", handlers.ViewPasteRaw)   // required for password
-	// Link Shortner
-	r.Get("/shortner/new", handlers.NewLinkPage)
-	r.Post("/shortner/new", handlers.NewLinkForm)
-	r.Get("/s/{linkID}", handlers.RedirectLink)
-	// File Drop
-	r.Get("/drop/new", handlers.NewDropPage)
-	r.Post("/drop/new", handlers.UploadFile)
-	r.Get("/drop/dl/{dropID}", handlers.ViewDrop)
-	handlers.FileServer(r, "/drops", http.Dir("./drops")) // download drops
-	// Static Files (CSS/JS/Images)
-	handlers.FileServer(r, "/static", http.Dir("./static"))
-
-	logger.Info("Starting at port", *config.Port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", *config.Port), r)
+	logger.Info("Starting at port", app.Config.Port)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", app.Config.Port), r)
 	if err != nil {
 		logger.Error(err)
 	}

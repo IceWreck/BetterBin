@@ -4,12 +4,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/IceWreck/BetterBin/config"
 	"github.com/go-chi/chi/v5"
 )
 
-// FileServer conveniently sets up a http.FileServer handler to serve
+// fileServer conveniently sets up a http.fileServer handler to serve
 // static files from a http.FileSystem.
-func FileServer(r chi.Router, path string, root http.FileSystem) {
+func fileServer(app *config.Application, r chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
 		panic("fileServer does not permit any URL parameters")
 	}

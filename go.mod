@@ -8,5 +8,6 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.9.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9
+	github.com/rs/zerolog v1.26.1
 	github.com/yuin/goldmark v1.4.4
 )

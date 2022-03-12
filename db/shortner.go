@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 
+	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/logger"
 )
 
@@ -18,9 +19,9 @@ type ShortenedLink struct {
 }
 
 // NewLink is the db operation to create a new shortened url in database
-func NewLink(id string, completeLink string) error {
+func NewLink(app *config.Application, id string, completeLink string) error {
 	query := `INSERT INTO shortened_links (id, complete_link, created) VALUES ($1, $2, datetime('now'))`
-	_, err := db.Exec(query, id, completeLink)
+	_, err := app.DB.Exec(query, id, completeLink)
 	if err != nil {
 		logger.Error("sql spews", err)
 		return errCannotCreateShortenedLink
@@ -29,9 +30,9 @@ func NewLink(id string, completeLink string) error {
 }
 
 // GetLink is the db operation to fetch expanded url for shortened url
-func GetLink(id string) (ShortenedLink, error) {
+func GetLink(app *config.Application, id string) (ShortenedLink, error) {
 	s := ShortenedLink{}
-	err := db.Get(&s, "SELECT * FROM shortened_links WHERE id=$1", id)
+	err := app.DB.Get(&s, "SELECT * FROM shortened_links WHERE id=$1", id)
 	if err != nil {
 		logger.Error("cannot fetch shortened link", id, err)
 	}
