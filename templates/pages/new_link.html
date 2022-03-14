@@ -16,7 +16,8 @@
         <div class="col-sm-9">
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="https://example.com/a/very/long/url"
-                    aria-label="Long URL" id="shortner-input" aria-describedby="shortner-createlink" />
+                    value='{{index . "url"}}' aria-label="Long URL" id="shortner-input"
+                    aria-describedby="shortner-createlink" />
                 <button class="btn btn-outline-primary" type="button" id="shortner-createlink" onclick="newLink()">
                     Shorten
                 </button>

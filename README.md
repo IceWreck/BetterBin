@@ -50,11 +50,13 @@ or `betterbin.example.com/paste/view/{pasteID}?preview=markdown`.
 **GET `/shortner/new`** -> html :
 
 - Create a new short link through the web page.
+- Parameter `url` - Default value of the `url` field of the webpage form. (Optional.)
 
 **POST `/shortner/new`** -> json :
 
 - Create a new short link through a url-encoded POST request.
 - Parameter `url` - The long URL you want to shorten. (Required.)
+- Parameter `id` - Your preferred short linkID. (Optional.)
 
 **GET `/s/{linkID}`** -> redirects to complete URL. :
 

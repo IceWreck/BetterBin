@@ -65,7 +65,10 @@ func newLinkForm(app *config.Application) http.HandlerFunc {
 // newLinkPage - webpage to make a new shortened link
 func newLinkPage(app *config.Application) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		renderTemplate(w, "new_link", nil)
+		longLink := r.FormValue("url")
+		renderTemplate(w, "new_link", map[string]string{
+			"url": longLink,
+		})
 	}
 }
 
