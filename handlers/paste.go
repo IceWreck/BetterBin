@@ -105,7 +105,7 @@ func viewPastePage(app *config.Application) http.HandlerFunc {
 		if paste.Preview == "code" {
 			htmlw := new(strings.Builder)
 			lexer := lexers.Match("foo." + paste.PreviewLanguage)
-			// if that didn't math try auto analyze
+			// if that didn't match try auto analyze
 			if lexer == nil {
 				lexer = lexers.Analyse(paste.Content)
 			}
