@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
@@ -13,10 +14,13 @@ import (
 
 var errInvalidLink = errors.New("invalid link")
 var errLinkNotFound = errors.New("expanded URL for this id not found")
+var errInvalidPreferredID = errors.New("preferred id is invalid")
+var errPreferredIDExists = errors.New("preferred id is already in use")
 
 // newLinkForm (API) - new shortened url using a POST request
 func newLinkForm(app *config.Application) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		preferredID := strings.Replace(r.PostFormValue("id"), " ", "", -1)
 		longLink := r.PostFormValue("url")
 
 		// error out if link is empty
@@ -33,6 +37,22 @@ func newLinkForm(app *config.Application) http.HandlerFunc {
 		}
 
 		linkID := newID(10)
+
+		if preferredID != "" {
+			// error out if preferred id doesn't pass validation
+			if len(preferredID) < 5 || len(preferredID) > 30 {
+				renderError(w, r, errInvalidPreferredID, http.StatusUnprocessableEntity)
+				return
+			}
+
+			if db.LinkIDExists(app, preferredID) {
+				renderError(w, r, errPreferredIDExists, http.StatusUnprocessableEntity)
+				return
+			}
+
+			linkID = preferredID
+		}
+
 		if err = db.NewLink(app, linkID, longLink); err != nil {
 			logger.Info(err)
 			renderError(w, r, err, http.StatusInternalServerError)

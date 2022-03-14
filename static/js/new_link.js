@@ -1,5 +1,6 @@
 const newLink = () => {
     const longURL = document.getElementById("shortner-input").value;
+    const preferredID = document.getElementById("preferred-id").value;
 
     if (longURL.length < 1) {
         newAlert("danger", "Input URL cannot be empty.");
@@ -14,6 +15,7 @@ const newLink = () => {
         },
         body: toUrlEncoded({
             url: longURL,
+            id: preferredID,
         }),
     })
         .then(function (response) {
@@ -23,10 +25,7 @@ const newLink = () => {
             console.log(data);
             if ("id" in data) {
                 let shortLink =
-                    "http://" +
-                    window.location.host +
-                    "/s/" +
-                    data["id"];
+                    "http://" + window.location.host + "/s/" + data["id"];
                 message = `The short link is <a href="${shortLink}" class="alert-link">${shortLink}</a>.`;
                 newAlert("success", message);
             } else if ("error" in data) {
@@ -34,7 +33,8 @@ const newLink = () => {
             } else {
                 newAlert("danger", "An unknown error occurred.");
             }
-        }).catch((error) => {
+        })
+        .catch((error) => {
             console.log(error);
             newAlert("danger", "An unknown error occurred.");
         });

@@ -38,3 +38,15 @@ func GetLink(app *config.Application, id string) (ShortenedLink, error) {
 	}
 	return s, err
 }
+
+// LinkIDExists returns true when id exists
+func LinkIDExists(app *config.Application, id string) bool {
+	s := 0
+	// returns error when id does not exist
+	err := app.DB.Get(&s, "SELECT 1 FROM shortened_links WHERE id=$1 LIMIT 1", id)
+	if err == nil {
+		logger.Debug("id already exist", id)
+		return true
+	}
+	return false
+}
