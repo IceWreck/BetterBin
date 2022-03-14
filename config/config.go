@@ -11,13 +11,13 @@ type Config struct {
 }
 
 func LoadConfig(app *Application) Config {
-	flag.Parse()
-
 	var settings Config
 
 	// Command line flags and their default values
 	settings.DatabasePath = *flag.String("d", "./betterbin.sqlite", "Database Path")
 	settings.Port = *flag.Int("p", 8963, "Port")
+
+	flag.Parse()
 
 	return settings
 }
