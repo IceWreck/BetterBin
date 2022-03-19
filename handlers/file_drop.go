@@ -9,7 +9,6 @@ import (
 
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
-	"github.com/IceWreck/BetterBin/logger"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -31,14 +30,14 @@ func uploadFile(app *config.Application) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
 		if err := r.ParseMultipartForm(maxUploadSize); err != nil {
-			logger.Error("uploaded file too big", err)
+			app.Logger.Error().Err(err).Msg("uploaded file too big")
 			renderError(w, r, errFileTooLarge, http.StatusBadRequest)
 			return
 		}
 
 		file, fileHeader, err := r.FormFile("upload")
 		if err != nil {
-			logger.Error("error uploading file", err)
+			app.Logger.Error().Err(err).Msg("error uploading file")
 			renderError(w, r, errUploadingFile, http.StatusInternalServerError)
 			return
 		}
@@ -52,13 +51,13 @@ func uploadFile(app *config.Application) http.HandlerFunc {
 		// create and save file
 		newFile, err := os.Create("./drops/" + newFileName)
 		if err != nil {
-			logger.Error("error uploading file", err)
+			app.Logger.Error().Err(err).Msg("error uploading file")
 			renderError(w, r, errUploadingFile, http.StatusInternalServerError)
 			return
 		}
 		defer newFile.Close()
 		if _, err := io.Copy(newFile, file); err != nil {
-			logger.Error("error uploading file", err)
+			app.Logger.Error().Err(err).Msg("error uploading file")
 			renderError(w, r, errUploadingFile, http.StatusInternalServerError)
 			return
 		}
@@ -66,12 +65,11 @@ func uploadFile(app *config.Application) http.HandlerFunc {
 		// db entry at the end only if upload succeeded
 		err = db.NewDrop(app, fileID, title, newFileName)
 		if err != nil {
-			logger.Error("error creating db entry", err)
+			app.Logger.Error().Err(err).Msg("error creating db entry")
 			renderError(w, r, errUploadingFile, http.StatusInternalServerError)
 			return
 		}
-
-		logger.Info("uploaded", newFileName, "size", fileHeader.Size)
+		app.Logger.Info().Int64("size", fileHeader.Size).Str("filename", newFileName).Msg("uploaded")
 		renderDropSuccess(w, r, fileID, newFileName)
 	}
 }
@@ -89,14 +87,13 @@ func viewDrop(app *config.Application) http.HandlerFunc {
 		switch filepath.Ext(drop.FileName) {
 		case ".jpg", ".jpeg", ".webp", ".png", ".gif":
 			drop.Preview = "image"
-			logger.Debug("preview image")
+			app.Logger.Debug().Str("dropid", dropID).Msg("preview image")
 		case ".mp4", ".webm":
 			drop.Preview = "video"
-			logger.Debug("preview video")
+			app.Logger.Debug().Str("dropid", dropID).Msg("preview video")
 		default:
 			drop.Preview = "none"
-			logger.Debug("no preview")
-
+			app.Logger.Debug().Str("dropid", dropID).Msg("no preview")
 		}
 
 		renderTemplate(w, "view_drop", drop)

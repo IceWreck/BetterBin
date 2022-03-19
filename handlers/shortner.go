@@ -8,7 +8,6 @@ import (
 
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
-	"github.com/IceWreck/BetterBin/logger"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -54,7 +53,7 @@ func newLinkForm(app *config.Application) http.HandlerFunc {
 		}
 
 		if err = db.NewLink(app, linkID, longLink); err != nil {
-			logger.Info(err)
+			app.Logger.Error().Err(err).Msg("")
 			renderError(w, r, err, http.StatusInternalServerError)
 			return
 		}
@@ -76,7 +75,7 @@ func newLinkPage(app *config.Application) http.HandlerFunc {
 func redirectLink(app *config.Application) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		linkID := chi.URLParam(r, "linkID")
-		logger.Debug("fetching link", linkID)
+		app.Logger.Debug().Str("link", linkID).Msg("")
 		slink, err := db.GetLink(app, linkID)
 		if err != nil {
 			renderError(w, r, errLinkNotFound, http.StatusNotFound)

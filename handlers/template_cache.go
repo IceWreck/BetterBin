@@ -2,15 +2,14 @@ package handlers
 
 import (
 	"html/template"
-
-	"github.com/IceWreck/BetterBin/logger"
+	"log"
 )
 
 var templateCache = cacheTemplates()
 
 // we want to parse and cache templates on program start instead of parsing them per request
 func cacheTemplates() map[string](*template.Template) {
-	logger.Info("parsing templates")
+	log.Println("parsing templates")
 	cache := map[string](*template.Template){
 		"home": template.Must(template.ParseFiles([]string{
 			"./templates/layout.html",

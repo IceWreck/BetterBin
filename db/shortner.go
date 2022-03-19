@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/IceWreck/BetterBin/config"
-	"github.com/IceWreck/BetterBin/logger"
 )
 
 var errCannotCreateShortenedLink = errors.New("cannot create shortened url")
@@ -23,7 +22,7 @@ func NewLink(app *config.Application, id string, completeLink string) error {
 	query := `INSERT INTO shortened_links (id, complete_link, created) VALUES ($1, $2, datetime('now'))`
 	_, err := app.DB.Exec(query, id, completeLink)
 	if err != nil {
-		logger.Error("sql spews", err)
+		app.Logger.Error().Err(err).Msg("sql spew")
 		return errCannotCreateShortenedLink
 	}
 	return nil
@@ -34,7 +33,7 @@ func GetLink(app *config.Application, id string) (ShortenedLink, error) {
 	s := ShortenedLink{}
 	err := app.DB.Get(&s, "SELECT * FROM shortened_links WHERE id=$1", id)
 	if err != nil {
-		logger.Error("cannot fetch shortened link", id, err)
+		app.Logger.Error().Str("id", id).Err(err).Msg("cannot fetch shortened link")
 	}
 	return s, err
 }
@@ -45,7 +44,7 @@ func LinkIDExists(app *config.Application, id string) bool {
 	// returns error when id does not exist
 	err := app.DB.Get(&s, "SELECT 1 FROM shortened_links WHERE id=$1 LIMIT 1", id)
 	if err == nil {
-		logger.Debug("id already exist", id)
+		app.Logger.Debug().Str("id", id).Msg("id already exists")
 		return true
 	}
 	return false

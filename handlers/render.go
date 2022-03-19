@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
-
-	"github.com/IceWreck/BetterBin/logger"
 )
 
 type errorJSON struct {
@@ -44,7 +43,7 @@ func renderDropSuccess(w http.ResponseWriter, r *http.Request, id string, filena
 func renderTemplate(w http.ResponseWriter, template string, data interface{}) {
 	err := templateCache[template].Execute(w, data)
 	if err != nil {
-		logger.Error(err.Error())
+		log.Println("Error rendering template", err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
 }

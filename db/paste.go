@@ -6,7 +6,6 @@ import (
 	"html/template"
 
 	"github.com/IceWreck/BetterBin/config"
-	"github.com/IceWreck/BetterBin/logger"
 )
 
 var errCannotCreatePaste = errors.New("cannot create a new paste")
@@ -34,7 +33,7 @@ func NewPaste(app *config.Application, id string, title string, content string, 
 	query = fmt.Sprintf(query, "datetime('now', '+"+expiry+"')")
 	_, err := app.DB.Exec(query, id, title, content, password, burn)
 	if err != nil {
-		logger.Error(err)
+		app.Logger.Error().Err(err).Msg("")
 		return errCannotCreatePaste
 	}
 	return nil
@@ -45,7 +44,7 @@ func GetPaste(app *config.Application, id string) (Paste, error) {
 	p := Paste{}
 	err := app.DB.Get(&p, "SELECT * FROM pastes WHERE id=$1", id)
 	if err != nil {
-		logger.Error("cannot fetch paste", id, err)
+		app.Logger.Error().Str("id", id).Err(err).Msg("cannot fetch paste")
 	}
 	return p, err
 }
@@ -55,7 +54,7 @@ func BurnPaste(app *config.Application, id string) error {
 	query := `DELETE FROM pastes WHERE id=$1 AND burn=1`
 	_, err := app.DB.Exec(query, id)
 	if err != nil {
-		logger.Error("cannot burn paste", err)
+		app.Logger.Error().Str("id", id).Err(err).Msg("cannot burn paste")
 		return err
 	}
 	return nil

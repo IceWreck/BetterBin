@@ -9,7 +9,6 @@ import (
 
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
-	"github.com/IceWreck/BetterBin/logger"
 	"github.com/alecthomas/chroma"
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/alecthomas/chroma/lexers"
@@ -70,9 +69,9 @@ func newPasteForm(app *config.Application) http.HandlerFunc {
 			expiry = "999 years"
 		}
 		pasteID := newID(10)
-		logger.Info("creating new paste", title, pasteID)
+		app.Logger.Debug().Str("title", title).Str("id", pasteID).Msg("creating new paste")
 		if err := db.NewPaste(app, pasteID, title, content, expiry, password, burn); err != nil {
-			logger.Info("could not create a new paste")
+			app.Logger.Info().Msg("could not create a new paste")
 			renderError(w, r, err, http.StatusInternalServerError)
 			return
 		}
@@ -111,20 +110,20 @@ func viewPastePage(app *config.Application) http.HandlerFunc {
 			}
 			// only proceed if that worked
 			if lexer != nil {
-				logger.Debug("found lexer", lexer.Config().Name)
+				app.Logger.Debug().Str("lexer", lexer.Config().Name).Msg("lexer matched")
 				lexer = chroma.Coalesce(lexer)
 				formatter := html.New(html.WithLineNumbers(true), html.LineNumbersInTable(true))
 				iterator, err := lexer.Tokenise(nil, paste.Content)
 				if err == nil {
 					err = formatter.Format(htmlw, styles.Colorful, iterator)
 					if err != nil {
-						logger.Error("syntax formatting error", err)
+						app.Logger.Error().Err(err).Msg("syntax formatting error")
 					} else {
 						// logger.Debug("syntax highlighted HTML is ", htmlw.String())
 						paste.ContentHTML = template.HTML(htmlw.String())
 					}
 				} else {
-					logger.Error("syntax tokenization error", err)
+					app.Logger.Error().Err(err).Msg("syntax tokenization error")
 				}
 			} else {
 				// just use the plaintext preview type if no lexer was found
@@ -143,7 +142,7 @@ func viewPastePage(app *config.Application) http.HandlerFunc {
 				),
 			)
 			if err := md.Convert([]byte(paste.Content), htmlw); err != nil {
-				logger.Error("markdown conversion error", err)
+				app.Logger.Error().Err(err).Msg("markdown conversion error")
 				paste.Preview = "plain"
 			}
 			paste.ContentHTML = template.HTML(htmlw.String())
@@ -172,7 +171,7 @@ func getPaste(app *config.Application, r *http.Request) (db.Paste, error) {
 	// password can be either URL query parameters or POST/PUT values
 	password := r.FormValue("password")
 
-	logger.Debug("fetching paste", pasteID)
+	app.Logger.Debug().Str("id", pasteID).Msg("fetching paste")
 	paste, err := db.GetPaste(app, pasteID)
 	if err != nil {
 		// error prolly means that it can't find paste
@@ -182,7 +181,7 @@ func getPaste(app *config.Application, r *http.Request) (db.Paste, error) {
 	// expiry check
 	expiry, err := time.Parse(timeLayout, paste.Expiry)
 	if err != nil {
-		logger.Error("unable to parse sql datetime", err)
+		app.Logger.Error().Err(err).Msg("unable to parse sql datetime")
 	}
 	if expiry.Sub(time.Now()) < 0 {
 		// expired
@@ -196,7 +195,7 @@ func getPaste(app *config.Application, r *http.Request) (db.Paste, error) {
 
 	// burn paste for future fetches if burn=1
 	if paste.Burn == 1 {
-		logger.Info("burning paste", pasteID)
+		app.Logger.Info().Str("id", pasteID).Msg("burning paste")
 		db.BurnPaste(app, pasteID)
 	}
 

@@ -9,7 +9,6 @@ import (
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
 	"github.com/IceWreck/BetterBin/handlers"
-	"github.com/IceWreck/BetterBin/logger"
 	"github.com/rs/zerolog"
 )
 
@@ -36,9 +35,9 @@ func main() {
 	// Initialize Router
 	r := handlers.Routes(app)
 
-	logger.Info("Starting at port", app.Config.Port)
+	app.Logger.Info().Int("port", app.Config.Port).Msg("Starting")
 	err := http.ListenAndServe(fmt.Sprintf(":%d", app.Config.Port), r)
 	if err != nil {
-		logger.Error(err)
+		app.Logger.Error().Err(err).Msg("")
 	}
 }
