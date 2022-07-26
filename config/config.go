@@ -14,8 +14,8 @@ func LoadConfig(app *Application) Config {
 	var settings Config
 
 	// Command line flags and their default values
-	settings.DatabasePath = *flag.String("d", "./betterbin.sqlite", "Database Path")
-	settings.Port = *flag.Int("p", 8963, "Port")
+	flag.StringVar(&settings.DatabasePath, "d", "./betterbin.sqlite", "Database Path")
+	flag.IntVar(&settings.Port, "p", 8963, "Port")
 
 	flag.Parse()
 
