@@ -9,10 +9,10 @@ import (
 
 	"github.com/IceWreck/BetterBin/config"
 	"github.com/IceWreck/BetterBin/db"
-	"github.com/alecthomas/chroma"
-	"github.com/alecthomas/chroma/formatters/html"
-	"github.com/alecthomas/chroma/lexers"
-	"github.com/alecthomas/chroma/styles"
+	"github.com/alecthomas/chroma/v2"
+	"github.com/alecthomas/chroma/v2/formatters/html"
+	"github.com/alecthomas/chroma/v2/lexers"
+	"github.com/alecthomas/chroma/v2/styles"
 	"github.com/go-chi/chi/v5"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -112,7 +112,9 @@ func viewPastePage(app *config.Application) http.HandlerFunc {
 			if lexer != nil {
 				app.Logger.Debug().Str("lexer", lexer.Config().Name).Msg("lexer matched")
 				lexer = chroma.Coalesce(lexer)
-				formatter := html.New(html.WithLineNumbers(true), html.LineNumbersInTable(true))
+				formatter := html.New(
+					html.WithLineNumbers(true),
+				)
 				iterator, err := lexer.Tokenise(nil, paste.Content)
 				if err == nil {
 					err = formatter.Format(htmlw, styles.Colorful, iterator)

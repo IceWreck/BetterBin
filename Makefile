@@ -4,7 +4,7 @@ run:
 
 # generate a binary
 build:
-	go build -o out/BetterBin .
+	CGO_ENABLED=0 go build -o out/BetterBin .
 
 # build a container image
 build-container:
@@ -16,7 +16,7 @@ run-container:
 
 # required when you need to build with older glibc (for older servers)
 start-old-container:
-	podman run -it --rm -v $(shell pwd):/src:z docker.io/library/golang:1.14.15-stretch
+	podman run -it --rm -v $(shell pwd):/src:z docker.io/library/golang:1.15
 
 # USAGE: make migrate_new MNAME=whatever_name
 migrate_new:
