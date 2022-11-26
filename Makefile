@@ -4,7 +4,7 @@ run:
 
 # generate a binary
 build:
-	CGO_ENABLED=0 go build -o out/BetterBin .
+	go build -o out/BetterBin .
 
 # build a container image
 build-container:
