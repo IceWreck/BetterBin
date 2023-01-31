@@ -8,7 +8,7 @@ WORKDIR /app
 RUN CGO_ENABLED=1 go build -ldflags '-s -w -extldflags "-static"' -o /app/BetterBin .
 
 # download and compile goose which is responsible for managing migrations
-RUN go get -u github.com/pressly/goose/cmd/goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 # main container
 FROM debian:stable-slim
